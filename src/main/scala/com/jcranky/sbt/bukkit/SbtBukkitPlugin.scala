@@ -5,26 +5,38 @@ import Keys._
 
 object SbtBukkitPlugin extends Plugin {
   val bukkitFolder = settingKey[File]("folder to use a the bukkit base")
-  val startBukkit = taskKey[Unit]("start bukkit server")
+  val startBukkit = taskKey[Unit]("start the bukkit server")
+  val stopBukkit = taskKey[Unit]("stop the bukkit server")
+
+  private var bukkitCmd: Option[Process] = None
 
   lazy val baseBukkitSettings: Seq[sbt.Def.Setting[_]] = Seq(
     bukkitFolder := new File(".bukkit"),
     startBukkit := {
       val log = streams.value.log
 
-      log.info("Preparing to start the bukkit server")
-      IO.createDirectory(bukkitFolder.value)
+      if (bukkitCmd.isDefined) log.info("bukkit already running")
+      else {
+        log.info("Preparing to start the bukkit server")
+        IO.createDirectory(bukkitFolder.value)
 
-      val bukkitJar = new File(bukkitFolder.value, "craftbukkit-beta.jar")
+        val bukkitJar = new File(bukkitFolder.value, "craftbukkit-beta.jar")
 
-      if (!bukkitJar.exists) {
-        log.info("Downloading local bukkit server jar")
-        IO.download(new URL("http://dl.bukkit.org/latest-beta/craftbukkit-beta.jar"), bukkitJar)
+        if (!bukkitJar.exists) {
+          log.info("Downloading local bukkit server jar")
+          IO.download(new URL("http://dl.bukkit.org/latest-beta/craftbukkit-beta.jar"), bukkitJar)
+        }
+
+        bukkitCmd = Some(Fork.java.fork(
+          ForkOptions(workingDirectory = Some(bukkitFolder.value)),
+          Seq("-classpath", bukkitJar.getAbsolutePath, "org.bukkit.craftbukkit.Main", "--noconsole")))
       }
-
-      val bukkitCmd = Fork.java.fork(
-        ForkOptions(workingDirectory = Some(bukkitFolder.value)),
-        Seq("-classpath", bukkitJar.getAbsolutePath, "org.bukkit.craftbukkit.Main", "--noconsole"))
+    },
+    stopBukkit := {
+      if (bukkitCmd.isDefined) {
+        bukkitCmd.get.destroy
+        bukkitCmd = None
+      }
     })
 
   override lazy val projectSettings = baseBukkitSettings
