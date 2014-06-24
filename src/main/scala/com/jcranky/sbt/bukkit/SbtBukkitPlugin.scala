@@ -2,11 +2,15 @@ package com.jcranky.sbt.bukkit
 
 import sbt._
 import Keys._
+import sbtassembly.Plugin._
+import sbtassembly.Plugin.AssemblyKeys._
 
 object SbtBukkitPlugin extends Plugin {
   val bukkitFolder = settingKey[File]("folder to use a the bukkit base")
   val startBukkit = taskKey[Unit]("start the bukkit server")
   val stopBukkit = taskKey[Unit]("stop the bukkit server")
+
+  val deployBukkitPlugin = taskKey[Unit]("deploy the bukkit plugin to the local bukkit server")
 
   private var bukkitCmd: Option[Process] = None
 
@@ -37,7 +41,11 @@ object SbtBukkitPlugin extends Plugin {
         bukkitCmd.get.destroy
         bukkitCmd = None
       }
+    },
+    deployBukkitPlugin := {
+      val jar = assembly.value
+      IO.copyFile(jar, new File(bukkitFolder.value, "plugins/" + jar.getName), true)
     })
 
-  override lazy val projectSettings = baseBukkitSettings
+  override lazy val projectSettings = baseBukkitSettings ++ assemblySettings
 }
