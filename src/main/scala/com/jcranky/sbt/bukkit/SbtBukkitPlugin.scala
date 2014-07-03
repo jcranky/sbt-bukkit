@@ -11,6 +11,7 @@ object SbtBukkitPlugin extends Plugin {
   val downloadBukkit = taskKey[File]("download the bukkit server jar")
   val stopBukkit = taskKey[Unit]("stop the bukkit server")
 
+  val createPluginYml = taskKey[File]("create the plugin.yml file if it doesn't exist")
   val deployBukkitPlugin = taskKey[Unit]("deploy the bukkit plugin to the local bukkit server")
 
   private var bukkitCmd: Option[Process] = None
@@ -47,6 +48,14 @@ object SbtBukkitPlugin extends Plugin {
         bukkitCmd.get.destroy
         bukkitCmd = None
       }
+    },
+    createPluginYml := {
+      val resourceDir = (resourceDirectory in Compile).value
+      val pluginYml = new File(resourceDir, "plugin.yml")
+
+      if (!pluginYml.exists) IO.write(pluginYml, s"""name: ${name.value}\nversion: ${version.value}""")
+
+      pluginYml
     },
     deployBukkitPlugin := {
       val jar = assembly.value
