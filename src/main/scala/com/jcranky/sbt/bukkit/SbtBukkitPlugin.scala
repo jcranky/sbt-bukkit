@@ -2,7 +2,8 @@ package com.jcranky.sbt.bukkit
 
 import org.bukkit.configuration.file.YamlConfiguration
 import sbt._
-import Keys._
+import sbt.Keys._
+import sbt.complete.DefaultParsers._
 import sbtassembly.Plugin._
 import sbtassembly.Plugin.AssemblyKeys._
 
@@ -12,7 +13,9 @@ object SbtBukkitPlugin extends Plugin {
   val downloadBukkit = taskKey[File]("download the bukkit server jar")
   val stopBukkit = taskKey[Unit]("stop the bukkit server")
 
-  val createPluginYml = taskKey[File]("create the plugin.yml file if it doesn't exist")
+  val pluginYml = taskKey[File]("create the plugin.yml file if it doesn't exist")
+  val addPluginYmlConfig = inputKey[Unit]("add a property and its value to the plugin.yml file")
+
   val deployBukkitPlugin = taskKey[Unit]("deploy the bukkit plugin to the local bukkit server")
 
   private var bukkitCmd: Option[Process] = None
@@ -50,7 +53,7 @@ object SbtBukkitPlugin extends Plugin {
         bukkitCmd = None
       }
     },
-    createPluginYml := {
+    pluginYml := {
       val resourceDir = (resourceDirectory in Compile).value
       val pluginYml = new File(resourceDir, "plugin.yml")
 
@@ -63,6 +66,12 @@ object SbtBukkitPlugin extends Plugin {
       }
 
       pluginYml
+    },
+    addPluginYmlConfig := {
+      val args: Seq[String] = spaceDelimited("<arg>").parsed
+      val configFile = YamlConfiguration.loadConfiguration(pluginYml.value)
+      configFile.set(args(0), args(1))
+      configFile.save(pluginYml.value)
     },
     deployBukkitPlugin := {
       val jar = assembly.value
