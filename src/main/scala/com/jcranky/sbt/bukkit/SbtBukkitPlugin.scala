@@ -1,5 +1,6 @@
 package com.jcranky.sbt.bukkit
 
+import org.bukkit.configuration.file.YamlConfiguration
 import sbt._
 import Keys._
 import sbtassembly.Plugin._
@@ -53,7 +54,13 @@ object SbtBukkitPlugin extends Plugin {
       val resourceDir = (resourceDirectory in Compile).value
       val pluginYml = new File(resourceDir, "plugin.yml")
 
-      if (!pluginYml.exists) IO.write(pluginYml, s"""name: ${name.value}\nversion: ${version.value}""")
+      if (!pluginYml.exists) {
+        val ymlConfig = new YamlConfiguration()
+        ymlConfig.set("name", name.value)
+        ymlConfig.set("version", version.value)
+        ymlConfig.set("author", organization.value)
+        ymlConfig.save(pluginYml)
+      }
 
       pluginYml
     },
