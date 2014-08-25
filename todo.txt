@@ -1,0 +1,16 @@
+
+- ideas that will become issues in github later (if not implemented before publishing):
+
+
+* task para alterar / adicionar configs ao Plugin.yml
+  * verificar inputs, quantidade, formatos, talvez até property names válidos
+  * auto completar "context-sensitive"
+
+* task para start / stop do bukkit
+  * usar revolver para fazer start/stop em thread separada (o Fork já cuida disso? ou só parte disso?)
+
+* permitir configurar versão do bukkit a ser usada  
+
+* permitir interagir com o bukkit sendo executado, pelo terminal do sbt
+
+* matar o bukkit quando o sbt console do projeto for fechado
