@@ -3,7 +3,7 @@ name := "sbt-bukkit"
 
 organization := "com.jcranky"
 
-version := "0.3"
+version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.10.4"
 
