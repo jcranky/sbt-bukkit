@@ -14,3 +14,5 @@
 * permitir interagir com o bukkit sendo executado, pelo terminal do sbt
 
 * matar o bukkit quando o sbt console do projeto for fechado
+
+* usar esquema bukkit:task ao invés dos nomes com camel case - e isso ajuda e auto complete?
