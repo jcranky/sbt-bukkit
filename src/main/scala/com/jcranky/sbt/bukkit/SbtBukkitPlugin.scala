@@ -55,17 +55,17 @@ object SbtBukkitPlugin extends Plugin {
     },
     pluginYml := {
       val resourceDir = (resourceDirectory in Compile).value
-      val pluginYml = new File(resourceDir, "plugin.yml")
+      val pluginYmlFile = new File(resourceDir, "plugin.yml")
 
-      if (!pluginYml.exists) {
+      if (!pluginYmlFile.exists) {
         val ymlConfig = new YamlConfiguration()
         ymlConfig.set("name", name.value)
         ymlConfig.set("version", version.value)
         ymlConfig.set("author", organization.value)
-        ymlConfig.save(pluginYml)
+        ymlConfig.save(pluginYmlFile)
       }
 
-      pluginYml
+      pluginYmlFile
     },
     addPluginYmlConfig := {
       val args: Seq[String] = spaceDelimited("<arg>").parsed
