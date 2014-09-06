@@ -11,7 +11,9 @@ To use _sbt-bukkit_, simply add it to the plugins.sbt of your project:
 
 (this will be valid only after this plugin is published, still pending!)
 
+```
 addSbtPlugin("com.jcranky" % "sbt-bukkit" % "0.1-SNAPSHOT")
+```
 
 And then add _bukkit_ itself to your project dependencies (in _build.sbt_ for example):
 
