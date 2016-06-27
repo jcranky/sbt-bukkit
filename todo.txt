@@ -1,6 +1,10 @@
 
 - ideas that will become issues in github later (if not implemented before publishing):
 
+* ao rodar o deploy, criar o plugin.yml automaticamente se ele não existir
+  * quando fizer isso, tentar detectar o 'main' (que extender JavaPlugin)
+  * verificar também a necessidade de re-startar o bukkit, se for o caso, fazer stop / start automaticamente a cada deploy
+    * outra opcao é usar o comando "/reload" no server
 
 * task para alterar / adicionar configs ao Plugin.yml
   * verificar inputs, quantidade, formatos, talvez até property names válidos

@@ -24,3 +24,6 @@ libraryDependencies ++= Seq(
   "org.bukkit" % "bukkit" % "1.7.9-R0.2"
 )
 ```
+
+Also, if you are versioning your project, it is probably a good ideia to add the _.bukkit_
+(or the folder your are using if you changed the default) folder to the ignore list.

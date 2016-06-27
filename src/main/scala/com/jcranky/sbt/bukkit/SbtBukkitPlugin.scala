@@ -44,7 +44,7 @@ object SbtBukkitPlugin extends Plugin {
       else {
         bukkitCmd = Some(Fork.java.fork(
           ForkOptions(workingDirectory = Some(bukkitFolder.value)),
-          Seq("-classpath", bukkitJar.getAbsolutePath, "org.bukkit.craftbukkit.Main", "--noconsole")))
+          Seq("-classpath", bukkitJar.getAbsolutePath, "org.bukkit.craftbukkit.Main", "--noconsole", "-o false")))
       }
     },
     stopBukkit := {
